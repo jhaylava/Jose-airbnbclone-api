@@ -1,1 +1,5 @@
-# B11G04-airbnb-api
+# Airbnb API
+### Batch 11 Group 04
+- Jonathan
+- Jose
+- Yaroslav
