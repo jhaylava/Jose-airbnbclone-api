@@ -6,7 +6,7 @@ router.get('/users', (req, res) => {
     { id: 1, firstName: 'Bob' },
     { id: 2, firstName: 'Alice' }
   ]
-  res.send('List of users')
+  res.json('List of users')
 })
 
 router.get('/users/1', (req, res) => {
@@ -20,7 +20,7 @@ router.get('/users/1', (req, res) => {
       'https://www.fakepersongenerator.com/Face/male/male20161083948806152.jpg'
   }
 
-  res.send(user)
+  res.json(user)
 })
 
 export default router
