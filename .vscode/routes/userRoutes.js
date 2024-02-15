@@ -8,3 +8,4 @@ router.get('/users', (req, res) => {
 router.get('/users/1', (req, res) => {
   res.send('User number 1')
 })
+export default router
