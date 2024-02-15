@@ -10,11 +10,19 @@ router.get('/users', (req, res) => {
       email: 'bobsmith@gmail.com',
       password: '1234BOB',
       profile:
-        'https://www.fakepersongenerator.com/Face/male/male20161083948806152.jpg'
+        'https://unsplash.com/photos/man-wearing-henley-top-portrait-7YVZYZeITc8'
     },
-    { id: 2, firstName: 'Alice' }
+    {
+      id: 2,
+      firstName: 'Alice',
+      lastName: 'Wonderland',
+      email: 'aliceinwonderland@gmail.com',
+      pasword: '1234ALICE',
+      profile:
+        'https://unsplash.com/photos/shallow-focus-photography-of-woman-outdoor-during-day-rDEOVtE7vOs'
+    }
   ]
-  res.json('List of users')
+  res.json(users)
 })
 
 router.get('/users/1', (req, res) => {
