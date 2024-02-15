@@ -10,3 +10,6 @@ router.get('/reviews', (req, res) => {
 router.get('/reviews/1', (req, res) => {
   res.send('Review number 1')
 })
+
+// Export the router
+export default router
