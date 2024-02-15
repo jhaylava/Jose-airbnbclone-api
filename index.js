@@ -1,7 +1,7 @@
 import express from 'express'
 
 const app = express()
-import { photosRouter } from './routes/photosRoutes.js'
+import photosRouter from './routes/photosRoutes.js'
 
 app.use(photosRouter)
 
