@@ -1,7 +1,9 @@
 import { Router } from 'express'
 const router = Router()
 
+// Route to access all houses data
 router.get('/houses', (req, res) => {
+  // Sample data for houses
   const houses = [
     {
       house_id: 1,
@@ -25,10 +27,12 @@ router.get('/houses', (req, res) => {
       host: 'Smirnoff'
     }
   ]
+  // Send the houses data as JSON response
   res.json(houses)
 })
-
+// Route to access data of a specific house (house_id = 1)
 router.get('/houses/1', (req, res) => {
+  // Sample data for a specific house
   const house = {
     house_id: 1,
     location: 'Bangkok',
@@ -36,6 +40,7 @@ router.get('/houses/1', (req, res) => {
     reviews: 'bunch of text',
     host: 'Lisa'
   }
+  // Send the specific house data as JSON response
   res.json(house)
 })
 
