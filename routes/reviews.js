@@ -9,7 +9,7 @@ router.get('/reviews', (req, res) => {
       user_id: 2,
       house_id: 34,
       rating: 4.5,
-      comment: 'it was a great prooperty',
+      comment: 'it was a great property',
       date: '2023-01-21'
     },
     {
@@ -26,7 +26,14 @@ router.get('/reviews', (req, res) => {
 
 // Define a GET route for fetching a single review
 router.get('/reviews/1', (req, res) => {
-  res.send('Review number 1')
+  res.send({
+    review_id: 1,
+    user_id: 2,
+    house_id: 34,
+    rating: 4.5,
+    comment: 'it was a great property',
+    date: '2023-01-21'
+  })
 })
 
 // Export the router
