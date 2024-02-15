@@ -5,3 +5,8 @@ const router = Router()
 router.get('/reviews', (req, res) => {
   res.send('List of reviews')
 })
+
+// Define a GET route for fetching a single review
+router.get('/reviews/1', (req, res) => {
+  res.send('Review number 1')
+})
