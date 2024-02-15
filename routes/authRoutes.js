@@ -16,4 +16,11 @@ router.get('/login/1', (req, res) => {
   res.send('Hello from Login')
 })
 
+router.get('/logout', (req, res) => {
+  res.send('List of logout')
+})
+router.get('/login/1', (req, res) => {
+  res.send('Hello from Logout')
+})
+
 export default router
