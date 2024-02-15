@@ -3,7 +3,15 @@ const router = Router()
 
 router.get('/users', (req, res) => {
   const users = [
-    { id: 1, firstName: 'Bob' },
+    {
+      id: 1,
+      firstName: 'Bob',
+      lastName: 'Smith',
+      email: 'bobsmith@gmail.com',
+      password: '1234BOB',
+      profile:
+        'https://www.fakepersongenerator.com/Face/male/male20161083948806152.jpg'
+    },
     { id: 2, firstName: 'Alice' }
   ]
   res.json('List of users')
