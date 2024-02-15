@@ -5,12 +5,28 @@ const router = Router()
 router.get('/bookings', (req, res) => {
   const bookings = [
     {
-      review_id: 1,
-      user_id: 2,
-      house_id: 34,
-      rating: 4.5,
-      comment: 'it was a great property',
-      date: '2023-01-21'
+      booking_id: 1,
+      house_id: 2,
+      guest_id: 1,
+      host_id: 34,
+      date_start: '2024-02-20',
+      date_end: '2024-02-22',
+      total_nights: 2,
+      price_daily: 24,
+      price_total: 48,
+      message: 'Cant wait to explore your island'
+      }
+       {
+      booking_id: 2,
+      house_id: 2,
+      guest_id: 2,
+      host_id: 34,
+      date_start: '2024-03-01',
+      date_end: '2024-03-05',
+      total_nights: 4,
+      price_daily: 24,
+      price_total: 96,
+      message: 'Looking forward to the stay'
     }
   ]
   res.send(bookings)
@@ -19,8 +35,17 @@ router.get('/bookings', (req, res) => {
 // Define a GET route for fetching a single review
 router.get('/bookings/1', (req, res) => {
   res.send({
-    bookings
-  })
+      booking_id: 1,
+      house_id: 2,
+      guest_id: 1,
+      host_id: 34,
+      date_start: '2024-02-20',
+      date_end: '2024-02-22',
+      total_nights: 2,
+      price_daily: 24,
+      price_total: 48,
+      message: 'Cant wait to explore your island'
+      })
 })
 
 // Export the router
