@@ -15,11 +15,11 @@ router.get('/bookings', (req, res) => {
       price_daily: 24,
       price_total: 48,
       message: 'Cant wait to explore your island'
-      }
-       {
+    },
+    {
       booking_id: 2,
       house_id: 2,
-      guest_id: 2,
+      guest_id: 3,
       host_id: 34,
       date_start: '2024-03-01',
       date_end: '2024-03-05',
@@ -35,17 +35,17 @@ router.get('/bookings', (req, res) => {
 // Define a GET route for fetching a single review
 router.get('/bookings/1', (req, res) => {
   res.send({
-      booking_id: 1,
-      house_id: 2,
-      guest_id: 1,
-      host_id: 34,
-      date_start: '2024-02-20',
-      date_end: '2024-02-22',
-      total_nights: 2,
-      price_daily: 24,
-      price_total: 48,
-      message: 'Cant wait to explore your island'
-      })
+    booking_id: 1,
+    house_id: 2,
+    guest_id: 1,
+    host_id: 34,
+    date_start: '2024-02-20',
+    date_end: '2024-02-22',
+    total_nights: 2,
+    price_daily: 24,
+    price_total: 48,
+    message: 'Cant wait to explore your island'
+  })
 })
 
 // Export the router
