@@ -6,6 +6,17 @@ router.get('/users', (req, res) => {
 })
 
 router.get('/users/1', (req, res) => {
-  res.send('User number 1')
+  const user = {
+    id: 1,
+    firstName: 'Alice',
+    lastName: 'Smith',
+    email: 'bobsmith@gmail.com',
+    password: '1234BOB',
+    profile:
+      'https://www.fakepersongenerator.com/Face/male/male20161083948806152.jpg'
+  }
+
+  res.send(user)
 })
+
 export default router
