@@ -29,12 +29,12 @@ router.get('/bookings', (req, res) => {
       message: 'Looking forward to the stay'
     }
   ]
-  res.send(bookings)
+  res.json(bookings)
 })
 
 // Define a GET route for fetching a single review
 router.get('/bookings/1', (req, res) => {
-  res.send({
+  res.json({
     booking_id: 1,
     house_id: 2,
     guest_id: 1,
