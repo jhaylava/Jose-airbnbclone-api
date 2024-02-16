@@ -1,41 +1,29 @@
 import { Router } from 'express'
 import db from '../db.js'
-
 const router = Router()
 
 // Define a GET route for fetching the list of reviews
-router.get('/reviews', (req, res) => {
-  const reviews = [
-    {
-      review_id: 1,
-      user_id: 2,
-      house_id: 34,
-      rating: 4.5,
-      comment: 'it was a great property',
-      date: '2023-01-21'
-    },
-    {
-      review_id: 2,
-      user_id: 4,
-      house_id: 34,
-      rating: 4.0,
-      comment: 'Awesome location',
-      date: '2024-02-02'
-    }
-  ]
-  res.json(reviews)
+router.get('/reviews', async (req, res) => {
+  try {
+    const { rows } = await db.query('SELECT * From reviews')
+    console.log(rows)
+    res.json(rows)
+  } catch (err) {
+    console.error(err.message)
+    res.json({ error: 'we are down' })
+  }
 })
 
 // Define a GET route for fetching a single review
-router.get('/reviews/1', (req, res) => {
-  res.json({
-    review_id: 1,
-    user_id: 2,
-    house_id: 34,
-    rating: 4.5,
-    comment: 'it was a great property',
-    date: '2023-01-21'
-  })
+router.get('/reviews/1', async (req, res) => {
+  try {
+    const { rows } = await db.query(`SELECT * FROM reviews WHERE review_id = 1`)
+    console.log(rows)
+    res.json(rows)
+  } catch (err) {
+    console.error(err.message)
+    res.json({ error: 'we are down' })
+  }
 })
 
 // Export the router
