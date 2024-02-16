@@ -1,5 +1,4 @@
 import express from 'express'
-
 const app = express()
 
 import bookingsRoutes from './routes/bookings.js'

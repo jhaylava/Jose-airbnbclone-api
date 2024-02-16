@@ -21,12 +21,12 @@ router.get('/reviews', (req, res) => {
       date: '2024-02-02'
     }
   ]
-  res.send(reviews)
+  res.json(reviews)
 })
 
 // Define a GET route for fetching a single review
 router.get('/reviews/1', (req, res) => {
-  res.send({
+  res.json({
     review_id: 1,
     user_id: 2,
     house_id: 34,
