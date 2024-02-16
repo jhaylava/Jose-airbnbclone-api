@@ -1,4 +1,6 @@
 import { Router } from 'express'
+import db from '../db.js'
+
 const router = Router()
 
 // Define a GET route for fetching the list of reviews
