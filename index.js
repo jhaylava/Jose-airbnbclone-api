@@ -1,6 +1,7 @@
 import express from 'express'
-const app = express()
 import reviewsRoutes from './routes/reviews.js'
+
+const app = express()
 
 app.use(reviewsRoutes)
 
