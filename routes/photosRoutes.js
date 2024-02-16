@@ -18,7 +18,7 @@ router.get('/photos/1', async (req, res) => {
   try {
     const { rows } = await db.query('SELECT * FROM photos WHERE photo_id = 1')
     console.log(rows)
-    res.json(rows)
+    res.json(rows[0])
   } catch (err) {
     console.error(err.message)
     // send specific photo data as JSON response
