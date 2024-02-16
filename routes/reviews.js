@@ -21,7 +21,7 @@ router.get('/reviews', (req, res) => {
       date: '2024-02-02'
     }
   ]
-  res.send(reviews)
+  res.json(reviews)
 })
 
 // Define a GET route for fetching a single review
