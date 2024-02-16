@@ -1,5 +1,8 @@
 import express from 'express'
 const app = express()
+import photosRoutes from './routes/photosRoutes.js'
+
+app.use(photosRoutes)
 
 import housesRouters from './routes/housesRoutes.js'
 
