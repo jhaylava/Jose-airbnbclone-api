@@ -1,22 +1,29 @@
 import { Router } from 'express'
+import db from '../db.js'
 const router = Router()
 // Route to access all photos data
-router.get('/photos', (req, res) => {
-  // Sample data for photos
-  const photos = [
-    { photo_id: 1, photo1: 'url', photo2: 'url', photo3: 'url' },
-    { photo_id: 2, photo1: 'url', photo2: 'url', photo3: 'url' },
-    { photo_id: 3, photo1: 'url', photo2: 'url', photo3: 'url' },
-    { photo_id: 4, photo1: 'url', photo2: 'url', photo3: 'url' }
-  ]
-  // Send the photos data as JSON response
-  res.json(photos)
+router.get('/photos', async (req, res) => {
+  try {
+    const { rows } = await db.query('SELECT * FROM photos') // query the database
+    console.log(rows)
+    res.json(rows) // respond with the data
+  } catch (err) {
+    console.error(err.message)
+    res.json(err)
+  }
 })
+
 // Route to access data of a specific photo (photo_id = 1)
-router.get('/photos/1', (req, res) => {
-  // Sample data for a specific photo
-  const photo = { photo_id: 1, photo1: 'url', photo2: 'url', photo3: 'url' }
-  // Send the specific photo data as JSON response
-  res.json(photo)
+router.get('/photos/1', async (req, res) => {
+  try {
+    const { rows } = await db.query('SELECT * FROM photos WHERE photo_id = 1')
+    console.log(rows)
+    res.json(rows[0])
+  } catch (err) {
+    console.error(err.message)
+    // send specific photo data as JSON response
+    res.json(err)
+  }
 })
+
 export default router
