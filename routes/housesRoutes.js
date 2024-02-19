@@ -1,13 +1,29 @@
-import { Router } from 'express'
+import { Router, query } from 'express'
 const router = Router()
 import db from '../db.js'
 
 // Route to access all houses data
 router.get('/houses', async (req, res) => {
   // Sample data for houses
+  let queryString = 'SELECT * FROM houses'
   try {
-    const result = await db.query('SELECT * FROM houses')
-    // Send the houses data as JSON response
+    if (req.query.location) {
+      queryString += ` WHERE houses.location ILIKE '${req.query.location}'`
+    }
+    if (req.query.max_price) {
+      queryString += ` AND houses.nightly_price <= '${req.query.max_price}'`
+    }
+    if (req.query.search) {
+      queryString += ` AND houses.description ILIKE '%${req.query.search}%'`
+    }
+    if (req.query.sort) {
+      let orderDescendent = 'DESC'
+      queryString += ` ORDER BY houses.nightly_price`
+      if (req.query.order) {
+        queryString += ` ${orderDescendent}`
+      }
+    }
+    const result = await db.query(queryString)
     res.json(result.rows)
   } catch (err) {
     res.json({ error: err.message })
