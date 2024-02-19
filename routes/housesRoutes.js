@@ -14,14 +14,22 @@ router.get('/houses', async (req, res) => {
   }
 })
 // Route to access data of a specific house (house_id = 1)
-router.get('/houses/1', async (req, res) => {
+router.get('/houses/:house_id', async (req, res) => {
   // Sample data for a specific house
+  const numbId = Number(req.params.house_id)
   try {
+    if (!numbId) {
+      throw new Error(`house id most be a number`)
+    }
     const result = await db.query(
-      'SELECT * FROM houses WHERE houses.house_id = 1'
+      `SELECT * FROM houses WHERE houses.house_id = ${numbId}`
     )
     // Send the specific house data as JSON response
-    res.json(result.rows)
+    let resultArr = result.rows
+    if (!resultArr.length) {
+      throw new Error(`Sorry, house not found`)
+    }
+    res.json(resultArr[0])
   } catch (err) {
     res.json({ error: err.message })
   }
