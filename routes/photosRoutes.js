@@ -9,7 +9,7 @@ router.get('/photos', async (req, res) => {
     res.json(rows) // respond with the data
   } catch (err) {
     console.error(err.message)
-    res.json(err)
+    res.json({ error: 'we are down' })
   }
 })
 
