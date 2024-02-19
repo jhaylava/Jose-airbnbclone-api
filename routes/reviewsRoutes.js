@@ -4,10 +4,19 @@ const router = Router()
 
 // Define a GET route for fetching the list of reviews
 router.get('/reviews', async (req, res) => {
+  console.log(req.query)
   try {
-    const { rows } = await db.query('SELECT * From reviews')
-    console.log(rows)
+    const { house } = req.query
+    const houseSearch = `
+      SELECT * FROM reviews
+      WHERE house_id = $1
+    `
+    const { rows } = await db.query(houseSearch, [house])
     res.json(rows)
+
+    /* const { rows } = await db.query('SELECT * From reviews')
+    console.log(rows)
+    res.json(rows) */
   } catch (err) {
     console.error(err.message)
     res.json({ error: 'we are down' })
@@ -15,14 +24,22 @@ router.get('/reviews', async (req, res) => {
 })
 
 // Define a GET route for fetching a single review
-router.get('/reviews/1', async (req, res) => {
+router.get('/reviews/:review_Id', async (req, res) => {
   try {
-    const { rows } = await db.query('SELECT * FROM reviews WHERE review_id = 1')
-    console.log(rows[0])
-    res.json(rows[0])
+    let numId = Number(req.params.review_Id)
+    if (!numId) {
+      throw new Error('User ID must be a number')
+    }
+    const query = await db.query(
+      `SELECT * FROM reviews WHERE reviews.review_id = ${numId}`
+    )
+    const reviewsArray = query.rows
+    if (reviewsArray.length === 0) {
+      throw new Error(`Sorry review ${numId} does not exist`)
+    }
+    res.json(reviewsArray[0])
   } catch (err) {
-    console.error(err.message)
-    res.json({ error: 'we are down' })
+    res.json({ error: err.message })
   }
 })
 
