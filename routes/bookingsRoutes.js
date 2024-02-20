@@ -5,17 +5,10 @@ const router = Router()
 // Define a GET route for fetching the list of reviews
 router.get('/bookings', async (req, res) => {
   try {
-    const { user } = req.query
-    const userSearch = `
-      SELECT * FROM bookings
-      WHERE user_id = $1
-      ORDER BY user_id DESC
-    `
-    const { rows } = await db.query(userSearch, [user])
-    res.json(rows)
+    const result = await db.query('SELECT * FROM bookings')
+    res.json(result)
   } catch (err) {
-    console.error(err.message)
-    res.json({ error: 'we are down' })
+    res.json({ error: err.message })
   }
 })
 
