@@ -1,15 +1,37 @@
 import { Router } from 'express'
 import db from '../db.js'
 const router = Router()
+
+// Post to photos data
+router.post('/photos', async (req, res) => {
+  const url = req.body.url
+  const house_id = req.body.house_id
+
+  console.log({ url, house_id })
+
+  const queryString = `
+  INSERT INTO photos ( url, house_id) VALUES ('${url}', ${house_id})
+  RETURNING * `
+
+  console.log(queryString)
+
+  try {
+    const { rows } = await db.query(queryString)
+    res.json(rows)
+  } catch (err) {
+    res.json({ error: err.message })
+  }
+})
+
 // Route to access all photos data
 router.get('/photos', async (req, res) => {
   try {
     const { house } = req.query
     const houseSearch = `
       SELECT * FROM photos
-      WHERE house_id = $1
     `
-    const { rows } = await db.query(houseSearch, [house])
+    const { rows } = await db.query(houseSearch)
+    console.log(houseSearch)
     res.json(rows)
   } catch (err) {
     console.error(err.message)

@@ -1,6 +1,6 @@
 import { Router } from 'express'
-const router = Router()
 import db from '../db.js'
+const router = Router()
 
 // Route to access all houses data
 router.get(
