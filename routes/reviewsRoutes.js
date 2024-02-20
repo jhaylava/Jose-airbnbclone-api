@@ -12,11 +12,7 @@ router.get('/reviews', async (req, res) => {
       WHERE house_id = $1
     `
     const { rows } = await db.query(houseSearch, [house])
-    res.json(rows[0])
-
-    /* const { rows } = await db.query('SELECT * From reviews')
-    console.log(rows)
-    res.json(rows) */
+    res.json(rows)
   } catch (err) {
     console.error(err.message)
     res.json({ error: 'we are down' })
