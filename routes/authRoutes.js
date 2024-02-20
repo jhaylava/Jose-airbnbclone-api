@@ -1,7 +1,8 @@
 import { Router } from 'express'
+import db from '../db.js'
 const router = Router()
 
-router.get('/signup', (req, res) => {
+router.post('/signup', (req, res) => {
   res.send('Hello from Signup')
 })
 
