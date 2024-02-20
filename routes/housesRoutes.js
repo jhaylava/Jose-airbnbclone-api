@@ -6,27 +6,38 @@ import db from '../db.js'
 router.get('/houses', async (req, res) => {
   // Sample data for houses
   let queryString = 'SELECT * FROM houses'
-  let whereCondition = 'WHERE'
-  let andCondition = 'AND'
+
   try {
+    if (
+      req.query.location ||
+      req.query.max_price ||
+      req.query.min_rooms ||
+      req.query.search
+    ) {
+      queryString += ' WHERE'
+    }
     if (req.query.location) {
-      queryString += ` ${!req.query.max_price || !req.query.search || (req.query.max_price && req.query.search) ? `${whereCondition}` : `${andCondition}`} houses.location ILIKE '${req.query.location}'`
+      queryString += ` houses.location ILIKE '%${req.query.location}%' AND`
     }
     if (req.query.max_price) {
-      queryString += ` ${!req.query.location && !req.query.search ? `${whereCondition}` : `${andCondition}`} houses.nightly_price <= '${req.query.max_price}'`
+      queryString += ` houses.nightly_price <= '${req.query.max_price}' AND`
     }
     if (req.query.search) {
-      queryString += ` ${!req.query.location && !req.query.max_price ? `${whereCondition}` : `${andCondition}`} houses.description ILIKE '%${req.query.search}%'`
-      console.log(queryString)
+      queryString += ` houses.description ILIKE '%${req.query.search}%' AND`
     }
-    if (req.query.sort) {
-      queryString += `${req.query.order ? ` ORDER BY houses.nightly_price DESC` : ` ORDER BY houses.nightly_price`}`
+    if (req.query.min_rooms) {
+      queryString += ` houses.bedrooms >= '${req.query.min_rooms}' AND`
     }
-    if (req.query.order) {
-      queryString += `${req.query.sort ? `` : ` ORDER BY houses.nightly_price DESC`}`
-      console.log(queryString)
+    if (req.query.sort && req.query.order) {
+      queryString += ` ORDER BY houses.${req.query.sort} ${req.query.order}`
     }
+
+    if (queryString.endsWith('AND')) {
+      queryString = queryString.slice(0, -4)
+    }
+
     const result = await db.query(queryString)
+
     res.json(result.rows)
   } catch (err) {
     res.json({ error: err.message })
