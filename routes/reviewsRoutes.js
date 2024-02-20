@@ -2,6 +2,30 @@ import { Router } from 'express'
 import db from '../db.js'
 const router = Router()
 
+// Post to reviews data
+router.post('/reviews', async (req, res) => {
+  const user_id = req.body.user_id
+  const house_id = req.body.house_id
+  const rating = req.body.rating
+  const content = req.body.content
+  const date = req.body.date
+
+  console.log({ user_id, house_id, rating, content, date })
+
+  const queryString = `
+  INSERT INTO reviews (user_id, house_id, rating, content, date) VALUES (${user_id}, ${house_id}, ${rating}, '${content}', '${date}')
+  RETURNING * `
+
+  console.log(queryString)
+
+  try {
+    const { rows } = await db.query(queryString)
+    res.json(rows)
+  } catch (err) {
+    res.json({ error: err.message })
+  }
+})
+
 // Define a GET route for fetching the list of reviews
 router.get('/reviews', async (req, res) => {
   console.log(req.query)
