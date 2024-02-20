@@ -2,6 +2,9 @@ import { Router } from 'express'
 import db from '../db.js'
 const router = Router()
 
+// Define a GET route for fetching the list of reviews
+router.post('/bookings', async (req, res) => {})
+
 // Define a GET route for fetching the list of bookings
 router.get('/bookings', async (req, res) => {
   try {
