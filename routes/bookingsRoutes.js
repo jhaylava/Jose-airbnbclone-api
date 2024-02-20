@@ -3,7 +3,14 @@ import db from '../db.js'
 const router = Router()
 
 // Define a GET route for fetching the list of reviews
-router.post('/bookings', async (req, res) => {})
+router.post('/bookings', async (req, res) => {
+  const house_id = req.body.house_id
+  const user_id = req.body.user_id
+  const price = req.body.price
+  const arrival_date = req.body.arrival_date
+  const departure_date = req.body.departure_date
+  const comment = req.body.comment
+})
 
 // Define a GET route for fetching the list of bookings
 router.get('/bookings', async (req, res) => {
