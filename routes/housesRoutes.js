@@ -13,10 +13,7 @@ router.post('/houses', async (req, res) => {
     )
     res.json(result.rows)
   } catch (err) {
-    res.json(
-      (error =
-        'an error ocurred, the house you are trying to find may not exist')
-    )
+    res.json((error = err.message))
   }
 })
 
