@@ -24,6 +24,9 @@ router.get('/houses', async (req, res) => {
       }
     }
     const result = await db.query(queryString)
+    if (result.rows.length === 0) {
+      throw new Error(`There's no houses that matches your criteria`)
+    }
     res.json(result.rows)
   } catch (err) {
     res.json({ error: err.message })
