@@ -18,20 +18,22 @@ router.get('/photos', async (req, res) => {
 })
 
 // Route to access data of a specific photo (photo_id = 1)
-router.get('/photos/:photo_Id', async (req, res) => {
+router.get('/photos/:photo_id', async (req, res) => {
+  // Sample data for a specific house
+  const numbId = Number(req.params.photo_id)
   try {
-    let numId = Number(req.params.photo_Id)
-    if (!numId) {
-      throw new Error('Photo ID must be a number')
+    if (!numbId) {
+      throw new Error(`photo id most be a number`)
     }
-    const query = await db.query(
-      `SELECT * FROM photos WHERE photos.photo_id = ${numId}`
+    const result = await db.query(
+      `SELECT * FROM photos WHERE photos.photo_id = ${numbId}`
     )
-    const photosArray = query.rows
-    if (photosArray.length === 0) {
-      throw new Error(`Sorry photo ${numId} does not exist`)
+    // Send the specific photo data as JSON response
+    let resultArr = result.rows
+    if (!resultArr.length) {
+      throw new Error(`Sorry, photo not found`)
     }
-    res.json(photosArray[0])
+    res.json(resultArr[0])
   } catch (err) {
     res.json({ error: err.message })
   }

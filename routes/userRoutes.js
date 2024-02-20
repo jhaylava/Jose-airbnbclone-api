@@ -13,14 +13,22 @@ router.get('/users', async (req, res) => {
   }
 })
 
-router.get('/users/1', async (req, res) => {
+router.get('/users/:user_Id', async (req, res) => {
   try {
-    const { rows } = await db.query('SELECT * FROM users WHERE user_id = 1')
-    console.log(rows)
-    res.json(rows)
+    let numId = Number(req.params.user_Id)
+    if (!numId) {
+      throw new Error('User ID must be a number')
+    }
+    const query = await db.query(
+      `SELECT * FROM users WHERE users.user_id = ${numId}`
+    )
+    const usersArray = query.rows
+    if (usersArray.length === 0) {
+      throw new Error(`Sorry user ${numId} does not exist`)
+    }
+    res.json(usersArray[0])
   } catch (err) {
-    console.error(err.message)
-    res.json(err)
+    res.json({ error: err.message })
   }
 })
 

@@ -20,20 +20,20 @@ router.get('/reviews', async (req, res) => {
 })
 
 // Define a GET route for fetching a single review
-router.get('/reviews/:review_Id', async (req, res) => {
+router.get('/reviews/:review_id', async (req, res) => {
+  const numbId = Number(req.params.review_id)
   try {
-    let numId = Number(req.params.review_Id)
-    if (!numId) {
-      throw new Error('User ID must be a number')
+    if (!numbId) {
+      throw new Error(`Review id most be a number`)
     }
-    const query = await db.query(
-      `SELECT * FROM reviews WHERE reviews.review_id = ${numId}`
+    const result = await db.query(
+      `SELECT * FROM reviews WHERE review_id = ${numbId}`
     )
-    const reviewsArray = query.rows
-    if (reviewsArray.length === 0) {
-      throw new Error(`Sorry review ${numId} does not exist`)
+    let resultArr = result.rows
+    if (!resultArr.length) {
+      throw new Error(`Sorry, review not found`)
     }
-    res.json(reviewsArray[0])
+    res.json(resultArr[0])
   } catch (err) {
     res.json({ error: err.message })
   }
