@@ -12,7 +12,7 @@ router.get('/reviews', async (req, res) => {
       WHERE house_id = $1
     `
     const { rows } = await db.query(houseSearch, [house])
-    res.json(rows)
+    res.json(rows[0])
 
     /* const { rows } = await db.query('SELECT * From reviews')
     console.log(rows)

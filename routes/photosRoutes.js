@@ -4,9 +4,13 @@ const router = Router()
 // Route to access all photos data
 router.get('/photos', async (req, res) => {
   try {
-    const { rows } = await db.query('SELECT * FROM photos') // query the database
-    console.log(rows)
-    res.json(rows) // respond with the data
+    const { house } = req.query
+    const houseSearch = `
+      SELECT * FROM photos
+      WHERE house_id = $1
+    `
+    const { rows } = await db.query(houseSearch, [house])
+    res.json(rows[0])
   } catch (err) {
     console.error(err.message)
     res.json({ error: 'we are down' })

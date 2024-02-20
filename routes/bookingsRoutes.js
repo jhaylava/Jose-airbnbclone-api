@@ -12,7 +12,7 @@ router.get('/bookings', async (req, res) => {
       ORDER BY user_id DESC
     `
     const { rows } = await db.query(userSearch, [user])
-    res.json(rows)
+    res.json(row)
   } catch (err) {
     console.error(err.message)
     res.json({ error: 'we are down' })
