@@ -10,6 +10,19 @@ router.post('/bookings', async (req, res) => {
   const arrival_date = req.body.arrival_date
   const departure_date = req.body.departure_date
   const comment = req.body.comment
+  console.log(
+    req.body,
+    house_id,
+    user_id,
+    price,
+    arrival_date,
+    departure_date,
+    comment
+  )
+  const queryString = `
+    INSERT INTO bookings ( house_id, user_id, price, arrival_date, departure_date, comment)
+    VALUES (${house_id}, ${user_id}, ${price},'${arrival_date}', '${departure_date}', '${comment}')
+    RETURNING * `
 })
 
 // Define a GET route for fetching the list of bookings
