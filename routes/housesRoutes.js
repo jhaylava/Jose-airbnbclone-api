@@ -6,27 +6,27 @@ import db from '../db.js'
 router.get('/houses', async (req, res) => {
   // Sample data for houses
   let queryString = 'SELECT * FROM houses'
+  let whereCondition = 'WHERE'
+  let andCondition = 'AND'
   try {
     if (req.query.location) {
-      queryString += ` WHERE houses.location ILIKE '${req.query.location}'`
+      queryString += ` ${!req.query.max_price || !req.query.search || (req.query.max_price && req.query.search) ? `${whereCondition}` : `${andCondition}`} houses.location ILIKE '${req.query.location}'`
     }
     if (req.query.max_price) {
-      queryString += ` AND houses.nightly_price <= '${req.query.max_price}'`
+      queryString += ` ${!req.query.location && !req.query.search ? `${whereCondition}` : `${andCondition}`} houses.nightly_price <= '${req.query.max_price}'`
     }
     if (req.query.search) {
-      queryString += ` AND houses.description ILIKE '%${req.query.search}%'`
+      queryString += ` ${!req.query.location && !req.query.max_price ? `${whereCondition}` : `${andCondition}`} houses.description ILIKE '%${req.query.search}%'`
+      console.log(queryString)
     }
     if (req.query.sort) {
-      let orderDescendent = 'DESC'
-      queryString += ` ORDER BY houses.nightly_price`
-      if (req.query.order) {
-        queryString += ` ${orderDescendent}`
-      }
+      queryString += `${req.query.order ? ` ORDER BY houses.nightly_price DESC` : ` ORDER BY houses.nightly_price`}`
+    }
+    if (req.query.order) {
+      queryString += `${req.query.sort ? `` : ` ORDER BY houses.nightly_price DESC`}`
+      console.log(queryString)
     }
     const result = await db.query(queryString)
-    if (result.rows.length === 0) {
-      throw new Error(`There's no houses that matches your criteria`)
-    }
     res.json(result.rows)
   } catch (err) {
     res.json({ error: err.message })
