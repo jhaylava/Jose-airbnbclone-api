@@ -10,7 +10,7 @@ import usersRoutes from './routes/userRoutes.js'
 const app = express()
 
 // middleware
-app.use(express2.json())
+app.use(express.json())
 
 // use routes
 app.use(authRoutes)
