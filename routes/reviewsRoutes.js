@@ -10,7 +10,7 @@ router.post('/reviews', async (req, res) => {
   const content = req.body.content
   const date = req.body.date
 
-  console.log({ user_id, house_id, rating, content, date })
+  console.log(user_id, house_id, rating, content, date)
 
   const queryString = `
   INSERT INTO reviews (user_id, house_id, rating, content, date) VALUES (${user_id}, ${house_id}, ${rating}, '${content}', '${date}')
