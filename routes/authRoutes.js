@@ -2,12 +2,34 @@ import { Router } from 'express'
 import db from '../db.js'
 const router = Router()
 
-router.post('/signup', (req, res) => {
-  res.send('Hello from Signup')
+router.post('/signup', async (req, res) => {
+  const first_name = req.body.first_name
+  const last_name = req.body.last_name
+  const email = req.body.email
+  const password = req.body.password
+  const profile_photo = req.body.profile_photo
+  const queryString = `
+  INSERT INTO users ( first_name, last_name, email, password, profile_photo) VALUES ('${first_name}', '${last_name}', '${email}', '${password}', '${profile_photo}' )
+  RETURNING * `
+  console.log(queryString)
+  try {
+    const { rows } = await db.query(queryString)
+    res.json(rows)
+  } catch (err) {
+    res.json({ error: err.message })
+  }
 })
 
-router.get('/login', (req, res) => {
-  res.send('Hello from Login')
+router.post('/login', async (req, res) => {
+  const email = req.body.email
+  const password = req.body.password
+  const queryString = `SELECT * FROM users WHERE users.email = '${email}' AND users.password = '${password}'`
+  try {
+    const { rows } = await db.query(queryString)
+    res.json(rows)
+  } catch (err) {
+    res.json({ error: err.message })
+  }
 })
 
 router.get('/logout', (req, res) => {
