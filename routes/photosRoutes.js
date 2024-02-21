@@ -61,4 +61,6 @@ router.get('/photos/:photo_id', async (req, res) => {
   }
 })
 
+// PATCH: Route for clients to update existing data
+
 export default router
