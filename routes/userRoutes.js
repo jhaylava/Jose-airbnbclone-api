@@ -2,6 +2,9 @@ import { Router } from 'express'
 import db from '../db.js'
 const router = Router()
 
+// UPDATE users data
+
+//READ users data
 router.get('/users', async (req, res) => {
   try {
     const { rows } = await db.query('SELECT * FROM users') // query the database
