@@ -61,4 +61,33 @@ router.get('/photos/:photo_id', async (req, res) => {
   }
 })
 
+// PATCH: Route for clients to update existing data
+router.patch('/photos/:photo_id', async (req, res) => {
+  try {
+    const { rows } = await db.query(`
+    UPDATE photos
+    SET url = '${req.body.url}'
+    WHERE photo_id = ${req.params.photo_id}
+    RETURNING *
+  `)
+    res.json(rows)
+  } catch (err) {
+    res.json({ error: err.error })
+  }
+})
+
+// Delete Route for clients to delete existing data
+router.delete('/photos/:photo_id', async (req, res) => {
+  try {
+    const { rowCount } = await db.query(`
+    DELETE FROM photos WHERE photo_id = ${req.params.photo_id}
+    `)
+    if (!rowCount) {
+      throw new Error('Delete Failed')
+    }
+    res.json(rowCount)
+  } catch (err) {
+    res.json({ error: err.message })
+  }
+})
 export default router

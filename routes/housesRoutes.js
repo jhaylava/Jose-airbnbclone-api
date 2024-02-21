@@ -2,6 +2,21 @@ import { Router } from 'express'
 import db from '../db.js'
 const router = Router()
 
+// Post router
+router.post('/houses', async (req, res) => {
+  const { location, bedrooms, bathrooms, nightly_price, description, host_id } =
+    req.body
+  try {
+    const result = await db.query(
+      `INSERT INTO houses (location, bedrooms, bathrooms, nightly_price, description, host_id)
+    VALUES ('${location}', ${bedrooms}, ${bathrooms}, ${nightly_price}, '${description}', ${host_id}) RETURNING *`
+    )
+    res.json(result.rows)
+  } catch (err) {
+    res.json(err.message)
+  }
+})
+
 // Route to access all houses data
 router.get('/houses', async (req, res) => {
   // Sample data for houses
@@ -69,7 +84,7 @@ router.patch('/houses/:house_id', async (req, res) => {
   let queryString = `UPDATE houses SET `
   try {
     if (req.body.location) {
-      queryString += `location = '${req.body.location}',`
+      queryString += `location = '${req.body.location}', `
     }
     if (req.body.bedrooms) {
       queryString += `bedrooms = ${req.body.bedrooms}, `
@@ -89,13 +104,24 @@ router.patch('/houses/:house_id', async (req, res) => {
     if (queryString.endsWith(', ')) {
       queryString = queryString.slice(0, -2)
     }
-
+    console.log(queryString)
     const rows = await db.query(
       (queryString = queryString + ` WHERE house_id = ${req.params.house_id}`)
     )
     res.json(rows)
   } catch (error) {
-    res.json({ error: err.message })
+    res.json({ error: error.message })
+  }
+})
+
+router.delete('/houses/:house_id', async (req, res) => {
+  try {
+    const { rowCount } = await db.query(
+      `DELETE FROM houses WHERE house_id = ${req.params.house_id}`
+    )
+    res.json(rowCount)
+  } catch (error) {
+    res.json({ error: error.message })
   }
 })
 
