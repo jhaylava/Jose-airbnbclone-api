@@ -76,4 +76,6 @@ router.patch('/photos/:photo_id', async (req, res) => {
   }
 })
 
+// Delete Route for clients to delete existing data
+
 export default router
