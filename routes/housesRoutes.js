@@ -13,7 +13,7 @@ router.post('/houses', async (req, res) => {
     )
     res.json(result.rows)
   } catch (err) {
-    res.json((error = err.message))
+    res.json(err.message)
   }
 })
 
