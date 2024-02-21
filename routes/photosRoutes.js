@@ -71,6 +71,7 @@ router.patch('/photos/:photo_id', async (req, res) => {
     WHERE photo_id = ${req.params.photo_id}
     RETURNING *
   `)
+  res.json(rows)
 })
 
 export default router
