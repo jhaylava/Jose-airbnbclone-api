@@ -68,6 +68,9 @@ router.delete('/reviews/:review_id', async (req, res) => {
   const { rowCount } = await db.query(`
   DELETE FROM reviews WHERE review_id = ${req.params.review_id}
   `)
+  if (!rowCount) {
+    throw new Error('Delete Failed')
+  }
   console.log(rowCount)
   res.json(rowCount)
 })
