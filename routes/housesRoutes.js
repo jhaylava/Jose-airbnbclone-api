@@ -64,5 +64,39 @@ router.get('/houses/:house_id', async (req, res) => {
     res.json({ error: err.message })
   }
 })
+//Route to updete fields of houses
+router.patch('/houses/:house_id', async (req, res) => {
+  let queryString = `UPDATE houses SET `
+  try {
+    if (req.body.location) {
+      queryString += `location = '${req.body.location}',`
+    }
+    if (req.body.bedrooms) {
+      queryString += `bedrooms = ${req.body.bedrooms}, `
+    }
+    if (req.body.bathrooms) {
+      queryString += `bathrooms = ${req.body.bathrooms}, `
+    }
+    if (req.body.nightly_price) {
+      queryString += `nightly_price = ${req.body.nightly_price}, `
+    }
+    if (req.body.description) {
+      queryString += `description = '${req.body.description}', `
+    }
+    if (req.body.host_id) {
+      queryString += `host_id = ${req.body.host_id}, `
+    }
+    if (queryString.endsWith(', ')) {
+      queryString = queryString.slice(0, -2)
+    }
+
+    const rows = await db.query(
+      (queryString = queryString + ` WHERE house_id = ${req.params.house_id}`)
+    )
+    res.json(rows)
+  } catch (error) {
+    res.json({ error: err.message })
+  }
+})
 
 export default router
