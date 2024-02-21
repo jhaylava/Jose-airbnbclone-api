@@ -63,8 +63,6 @@ router.get('/photos/:photo_id', async (req, res) => {
 
 // PATCH: Route for clients to update existing data
 router.patch('/photos/:photo_id', async (req, res) => {
-  console.log('photo_id:', req.params.photo_id)
-  console.log('body:', req.body)
   try {
     const { rows } = await db.query(`
     UPDATE photos
