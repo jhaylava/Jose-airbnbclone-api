@@ -2,10 +2,8 @@ import { Router } from 'express'
 import db from '../db.js'
 const router = Router()
 
-// UPDATE users data
-
 //READ users data
-router.get('/users', async (req, res) => {
+router.get('/user/', async (req, res) => {
   try {
     const { rows } = await db.query('SELECT * FROM users') // query the database
     console.log(rows)
@@ -35,4 +33,25 @@ router.get('/users/:user_Id', async (req, res) => {
   }
 })
 
+// UPDATE users data
+router.patch('/users/:user_id', async (req, res) => {
+  console.log('user_id:', req.params.user_id)
+  console.log('body:', req.body)
+  try {
+    const { rows } = await db.query(
+      `UPDATE users 
+      SET first_name = '${req.body.first_name}', last_name = '${req.body.last_name}', 
+      email = '${req.body.email}', password = '${req.body.password}', 
+      profile_photo = '${req.body.profile_photo}' 
+      WHERE user_id = ${req.params.user_id}
+      RETURNING *
+    `
+    )
+    const updatedUser = rows[0]
+    updatedUser.password = '*'.repeat(updatedUser.password.length)
+    res.json(updatedUser)
+  } catch (err) {
+    res.json({ error: err.message })
+  }
+})
 export default router
