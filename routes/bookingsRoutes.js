@@ -2,7 +2,7 @@ import { Router } from 'express'
 import db from '../db.js'
 const router = Router()
 
-// Define a POST route for fetching the list of reviews
+// Define a POST route for creating a list of bookings
 router.post('/bookings', async (req, res) => {
   const house_id = req.body.house_id
   const user_id = req.body.user_id
