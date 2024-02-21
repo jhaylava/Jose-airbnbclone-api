@@ -66,10 +66,10 @@ router.get('/houses/:house_id', async (req, res) => {
 })
 router.delete('/houses/:house_id', async (req, res) => {
   try {
-    const { countRows } = db.query(
+    const { rowCount } = await db.query(
       `DELETE FROM houses WHERE house_id = ${req.params.house_id}`
     )
-    res.json(countRows)
+    res.json(rowCount)
   } catch (error) {
     res.json({ error: err.message })
   }
