@@ -72,7 +72,6 @@ router.delete('/reviews/:review_id', async (req, res) => {
     if (!rowCount) {
       throw new Error('Delete Failed')
     }
-    console.log(rowCount)
     res.json(rowCount)
   } catch (err) {
     res.json({ error: err.message })
