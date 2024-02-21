@@ -2,6 +2,7 @@ import { Router } from 'express'
 import db from '../db.js'
 const router = Router()
 
+// READ users data
 router.get('/users', async (req, res) => {
   try {
     const { rows } = await db.query('SELECT * FROM users') // query the database
@@ -32,4 +33,36 @@ router.get('/users/:user_Id', async (req, res) => {
   }
 })
 
+// UPDATE users data
+router.patch('/users/:user_id', async (req, res) => {
+  let queryString = 'UPDATE users SET'
+  try {
+    if (req.body.first_name) {
+      queryString += ` first_name = '${req.body.first_name}',`
+    }
+    if (req.body.last_name) {
+      queryString += ` last_name = '${req.body.last_name}',`
+    }
+    if (req.body.email) {
+      queryString += ` email = '${req.body.email}',`
+    }
+    if (req.body.password) {
+      queryString += ` password = '${req.body.password}',`
+    }
+    if (req.body.profile_photo) {
+      queryString += ` profile_photo = '${req.body.profile_photo}' `
+    }
+    if (queryString.endsWith(',')) {
+      queryString = queryString.slice(0, -1)
+    }
+    queryString += ` WHERE user_id = ${req.params.user_id} RETURNING first_name, last_name, email, profile_photo`
+    console.log(queryString)
+
+    const result = await db.query(queryString)
+
+    res.json(result.rows)
+  } catch (err) {
+    res.json({ error: err.message })
+  }
+})
 export default router
