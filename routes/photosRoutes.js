@@ -65,13 +65,17 @@ router.get('/photos/:photo_id', async (req, res) => {
 router.patch('/photos/:photo_id', async (req, res) => {
   console.log('photo_id:', req.params.photo_id)
   console.log('body:', req.body)
-  const { rows } = await db.query(`
+  try {
+    const { rows } = await db.query(`
     UPDATE photos
     SET url = '${req.body.url}'
     WHERE photo_id = ${req.params.photo_id}
     RETURNING *
   `)
-  res.json(rows)
+    res.json(rows)
+  } catch (err) {
+    res.json({ error: err.error })
+  }
 })
 
 export default router
