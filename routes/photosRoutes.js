@@ -82,6 +82,10 @@ router.delete('/photos/:photo_id', async (req, res) => {
     const { rowCount } = await db.query(`
     DELETE FROM photos WHERE photo_id = ${req.params.photo_id}
     `)
+    if (!rowCount) {
+      throw new Error('Delete Failed')
+    }
+    res.json(rowCount)
   } catch (err) {
     res.json({ error: err.message })
   }
