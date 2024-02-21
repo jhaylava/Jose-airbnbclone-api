@@ -63,5 +63,7 @@ router.get('/reviews/:review_id', async (req, res) => {
   }
 })
 
+// DELETE route for reviews
+
 // Export the router
 export default router
