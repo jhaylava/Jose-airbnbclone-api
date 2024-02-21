@@ -44,12 +44,10 @@ router.patch('/users/:user_id', async (req, res) => {
       email = '${req.body.email}', password = '${req.body.password}', 
       profile_photo = '${req.body.profile_photo}' 
       WHERE user_id = ${req.params.user_id}
-      RETURNING *
+      RETURNING first_name, last_name, email, profile_photo
     `
     )
-    const updatedUser = rows[0]
-    updatedUser.password = '*'.repeat(updatedUser.password.length)
-    res.json(updatedUser)
+    res.json(rows[0])
   } catch (err) {
     res.json({ error: err.message })
   }
