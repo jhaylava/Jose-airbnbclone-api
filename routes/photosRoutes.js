@@ -76,4 +76,18 @@ router.patch('/photos/:photo_id', async (req, res) => {
   }
 })
 
+// Delete Route for clients to delete existing data
+router.delete('/photos/:photo_id', async (req, res) => {
+  try {
+    const { rowCount } = await db.query(`
+    DELETE FROM photos WHERE photo_id = ${req.params.photo_id}
+    `)
+    if (!rowCount) {
+      throw new Error('Delete Failed')
+    }
+    res.json(rowCount)
+  } catch (err) {
+    res.json({ error: err.message })
+  }
+})
 export default router
