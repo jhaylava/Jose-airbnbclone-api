@@ -65,14 +65,18 @@ router.get('/reviews/:review_id', async (req, res) => {
 
 // DELETE route for reviews
 router.delete('/reviews/:review_id', async (req, res) => {
-  const { rowCount } = await db.query(`
-  DELETE FROM reviews WHERE review_id = ${req.params.review_id}
+  try {
+    const { rowCount } = await db.query(`
+    DELETE FROM reviews WHERE review_id = ${req.params.review_id}
   `)
-  if (!rowCount) {
-    throw new Error('Delete Failed')
+    if (!rowCount) {
+      throw new Error('Delete Failed')
+    }
+    console.log(rowCount)
+    res.json(rowCount)
+  } catch (err) {
+    res.json({ error: err.message })
   }
-  console.log(rowCount)
-  res.json(rowCount)
 })
 // Export the router
 export default router
