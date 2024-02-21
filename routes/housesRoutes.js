@@ -64,5 +64,15 @@ router.get('/houses/:house_id', async (req, res) => {
     res.json({ error: err.message })
   }
 })
+router.delete('/houses/:house_id', async (req, res) => {
+  try {
+    const { countRows } = db.query(
+      `DELETE FROM houses WHERE house_id = ${req.params.house_id}`
+    )
+    res.json(countRows)
+  } catch (error) {
+    res.json({ error: err.message })
+  }
+})
 
 export default router
