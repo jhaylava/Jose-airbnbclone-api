@@ -35,19 +35,32 @@ router.get('/users/:user_Id', async (req, res) => {
 
 // UPDATE users data
 router.patch('/users/:user_id', async (req, res) => {
-  console.log('user_id:', req.params.user_id)
-  console.log('body:', req.body)
+  let queryString = 'UPDATE users SET'
   try {
-    const { rows } = await db.query(
-      `UPDATE users 
-      SET first_name = '${req.body.first_name}', last_name = '${req.body.last_name}', 
-      email = '${req.body.email}', password = '${req.body.password}', 
-      profile_photo = '${req.body.profile_photo}' 
-      WHERE user_id = ${req.params.user_id}
-      RETURNING first_name, last_name, email, profile_photo
-    `
-    )
-    res.json(rows[0])
+    if (req.body.first_name) {
+      queryString += ` first_name = '${req.body.first_name}',`
+    }
+    if (req.body.last_name) {
+      queryString += ` last_name = '${req.body.last_name}',`
+    }
+    if (req.body.email) {
+      queryString += ` email = '${req.body.email}',`
+    }
+    if (req.body.password) {
+      queryString += ` password = '${req.body.password}',`
+    }
+    if (req.body.profile_photo) {
+      queryString += ` profile_photo = '${req.body.profile_photo}' `
+    }
+    if (queryString.endsWith(',')) {
+      queryString = queryString.slice(0, -1)
+    }
+    queryString += ` WHERE user_id = ${req.params.user_id} RETURNING first_name, last_name, email, profile_photo`
+    console.log(queryString)
+
+    const result = await db.query(queryString)
+
+    res.json(result.rows)
   } catch (err) {
     res.json({ error: err.message })
   }
