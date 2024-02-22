@@ -5,12 +5,14 @@ import photosRoutes from './routes/photosRoutes.js'
 import housesRouters from './routes/housesRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import usersRoutes from './routes/userRoutes.js'
+import cookieParser from 'cookie-parser'
 
 // start app
 const app = express()
 
 // middleware
 app.use(express.json())
+app.use(cookieParser())
 
 // use routes
 app.use(authRoutes)
