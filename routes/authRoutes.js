@@ -40,7 +40,7 @@ router.post('/login', async (req, res) => {
 
 router.get('/logout', (req, res) => {
   res.cookieClear('jwt')
-  res.send('Hello from Logout')
+  res.send('You have logged out')
 })
 
 export default router
