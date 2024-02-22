@@ -14,6 +14,10 @@ router.post('/signup', async (req, res) => {
   RETURNING * `
   console.log(queryString)
   try {
+    // create salt
+    const salt = await bcrypt.genSalt(10)
+    // Hashing password
+    const hashedPassword = await bcrypt.hash(req.body.password, salt)
     const { rows } = await db.query(queryString)
     res.json(rows)
   } catch (err) {
