@@ -4,16 +4,16 @@ const router = Router()
 import bcrypt from 'bcrypt'
 
 router.post('/signup', async (req, res) => {
-  const first_name = req.body.first_name
-  const last_name = req.body.last_name
-  const email = req.body.email
-  const password = req.body.password
-  const profile_photo = req.body.profile_photo
-  const queryString = `
-  INSERT INTO users ( first_name, last_name, email, password, profile_photo) VALUES ('${first_name}', '${last_name}', '${email}', '${password}', '${profile_photo}' )
-  RETURNING * `
-  console.log(queryString)
   try {
+    const first_name = req.body.first_name
+    const last_name = req.body.last_name
+    const email = req.body.email
+    const password = req.body.password
+    const profile_photo = req.body.profile_photo
+    const queryString = `
+  INSERT INTO users ( first_name, last_name, email, password, profile_photo) VALUES ('${first_name}', '${last_name}', '${email}', '${hashedPassword}', '${password}', '${profile_photo}' )
+  RETURNING * `
+    console.log(queryString)
     // create salt
     const salt = await bcrypt.genSalt(10)
     // Hashing password
