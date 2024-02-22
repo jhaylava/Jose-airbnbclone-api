@@ -2,6 +2,8 @@ import { Router } from 'express'
 import db from '../db.js'
 const router = Router()
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { jwtSecret } from '../secrets.js'
 
 router.post('/signup', async (req, res) => {
   try {
@@ -18,8 +20,16 @@ router.post('/signup', async (req, res) => {
     const queryString = ` INSERT INTO users ( first_name, last_name, email, password, profile_photo) 
     VALUES ('${first_name}', '${last_name}', '${email}', '${hashedPassword}', '${profile_photo}' )
   RETURNING * `
-    console.log(queryString)
+    //
     const { rows } = await db.query(queryString)
+    const user = rows[0]
+    const simpleUser = {
+      user_id: user.user_id,
+      email: user.email
+    }
+
+    let token = jwt.sign(simpleUser, jwtSecret)
+
     res.json(rows)
   } catch (err) {
     res.json({ error: err.message })
