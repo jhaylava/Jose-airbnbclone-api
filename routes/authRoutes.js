@@ -30,7 +30,8 @@ router.post('/signup', async (req, res) => {
 
     let token = jwt.sign(simpleUser, jwtSecret)
 
-    res.json(rows)
+    res.cookie(jwt, token)
+    res.json(user)
   } catch (err) {
     res.json({ error: err.message })
   }
