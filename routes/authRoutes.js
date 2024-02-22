@@ -10,14 +10,14 @@ router.post('/signup', async (req, res) => {
     const email = req.body.email
     const password = req.body.password
     const profile_photo = req.body.profile_photo
-    const queryString = `
-  INSERT INTO users ( first_name, last_name, email, password, profile_photo) VALUES ('${first_name}', '${last_name}', '${email}', '${hashedPassword}', '${password}', '${profile_photo}' )
-  RETURNING * `
-    console.log(queryString)
+
     // create salt
     const salt = await bcrypt.genSalt(10)
     // Hashing password
-    const hashedPassword = await bcrypt.hash(req.body.password, salt)
+    const hashedPassword = await bcrypt.hash(password, salt)
+    const queryString = ` INSERT INTO users ( first_name, last_name, email, password, profile_photo) VALUES ('${first_name}', '${last_name}', '${email}', '${hashedPassword}', '${password}', '${profile_photo}' )
+  RETURNING * `
+    console.log(queryString)
     const { rows } = await db.query(queryString)
     res.json(rows)
   } catch (err) {
