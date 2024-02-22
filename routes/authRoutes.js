@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import db from '../db.js'
 const router = Router()
+import bcrypt from 'bcrypt'
 
 router.post('/signup', async (req, res) => {
   const first_name = req.body.first_name
