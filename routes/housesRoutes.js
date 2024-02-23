@@ -1,15 +1,19 @@
 import { Router } from 'express'
 import db from '../db.js'
+import jwt from 'jsonwebtoken'
+import { secret } from '../secrets.js'
 const router = Router()
 
 // Post router
 router.post('/houses', async (req, res) => {
   const { location, bedrooms, bathrooms, nightly_price, description, host_id } =
     req.body
+
   try {
+    let decoded = jwt.verify(req.cookies.jwt, secret)
     const result = await db.query(
       `INSERT INTO houses (location, bedrooms, bathrooms, nightly_price, description, host_id)
-    VALUES ('${location}', ${bedrooms}, ${bathrooms}, ${nightly_price}, '${description}', ${host_id}) RETURNING *`
+    VALUES ('${location}', ${bedrooms}, ${bathrooms}, ${nightly_price}, '${description}', ${decoded.host_id}) RETURNING *`
     )
     res.json(result.rows)
   } catch (err) {

@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import db from '../db.js'
 import jwt from 'jsonwebtoken'
-import secret from '../secrets.js'
+import { secret } from '../secrets.js'
 const router = Router()
 
 // Define a POST route for creating a list of bookings
@@ -12,7 +12,7 @@ router.post('/bookings', async (req, res) => {
       req.body
     const { rows } =
       await db.query(`INSERT INTO bookings ( house_id, user_id, price, arrival_date, departure_date, comment)
-    VALUES (${house_id.house_id}, ${decoded.user_id}, ${price.price},'${arrival_date.arrival_date}', '${departure_date.departure_date}', '${comment.comment}')
+    VALUES (${house_id}, ${decoded.user_id}, ${price},'${arrival_date}', '${departure_date}', '${comment}')
     RETURNING * `)
     res.json(rows)
   } catch (err) {

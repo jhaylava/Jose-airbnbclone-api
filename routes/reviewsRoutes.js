@@ -1,5 +1,7 @@
 import { Router } from 'express'
 import db from '../db.js'
+import jwt from 'jsonwebtoken'
+import { secret } from '../secrets.js'
 const router = Router()
 
 // Post to reviews data
@@ -11,9 +13,9 @@ router.post('/reviews', async (req, res) => {
   const date = req.body.date
 
   console.log(user_id, house_id, rating, content, date)
-
+  let decoded = jwt.verify(req.cookies.jwt, secret)
   const queryString = `
-  INSERT INTO reviews (user_id, house_id, rating, content, date) VALUES (${user_id}, ${house_id}, ${rating}, '${content}', '${date}')
+  INSERT INTO reviews (user_id, house_id, rating, content, date) VALUES (${decoded.user_id}, ${house_id}, ${rating}, '${content}', '${date}')
   RETURNING * `
 
   console.log(queryString)
