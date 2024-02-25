@@ -10,7 +10,7 @@ router.post('/photos', async (req, res) => {
     const { url, house_id } = req.body
     const token = req.cookies.jwt
     if (!token) {
-      throw new Error('Missing the token')
+      throw new Error('Invalid authentication token')
     }
 
     const decoded = jwt.verify(token, secret)
