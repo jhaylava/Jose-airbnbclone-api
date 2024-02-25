@@ -11,7 +11,7 @@ router.post('/reviews', async (req, res) => {
     const token = req.cookies.jwt
 
     if (!token) {
-      throw new Error('Missing JWT token')
+      throw new Error('Missing the token')
     }
 
     const decoded = jwt.verify(token, secret)
