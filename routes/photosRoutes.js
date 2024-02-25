@@ -29,9 +29,9 @@ router.post('/photos', async (req, res) => {
     `
 
     const { rows } = await db.query(insertPhotoQuery)
-    res.status(201).json(rows[0]) // 201 Created
+    res.json(rows[0]) // 201 Created
   } catch (err) {
-    res.status(400).json({ error: err.message }) // 400 Bad Request
+    res.json({ error: err.message }) // 400 Bad Request
   }
 })
 
