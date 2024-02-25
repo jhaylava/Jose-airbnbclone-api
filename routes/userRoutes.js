@@ -1,31 +1,53 @@
 import { Router } from 'express'
 import db from '../db.js'
+import jwt from 'jsonwebtoken'
+import { secret } from '../secrets.js'
 const router = Router()
 
-// READ users data
+// Route to fetch the authenticated user
 router.get('/users', async (req, res) => {
   try {
-    const { rows } = await db.query('SELECT * FROM users') // query the database
-    console.log(rows)
-    res.json(rows) // respond with the data
+    const token = req.cookies.jwt
+    if (!token) {
+      throw new Error('Invalid authentication token')
+    }
+    const decoded = jwt.verify(token, secret)
+    const query = `SELECT * FROM users WHERE user_id = '${decoded.user_id}'`
+    const result = await db.query(query)
+    const user = result.rows[0]
+
+    if (!user) {
+      throw new Error('Authenticated user not found')
+    }
+
+    res.json(user)
   } catch (err) {
-    console.error(err.message)
-    res.json(err)
+    res.json({ error: err.message })
   }
 })
 
+/// Route to fetch a specific user by ID
 router.get('/users/:user_Id', async (req, res) => {
   try {
-    let numId = Number(req.params.user_Id)
+    const token = req.cookies.jwt
+    if (!token) {
+      throw new Error('Invalid authentication token')
+    }
+    const decoded = jwt.verify(token, secret)
+    const requestedUserId = Number(req.params.user_Id)
+    if (decoded.user_id !== requestedUserId) {
+      throw new Error('You are not authorized')
+    }
+
+    const numId = Number(req.params.user_Id)
     if (!numId) {
       throw new Error('User ID must be a number')
     }
-    const query = await db.query(
-      `SELECT * FROM users WHERE users.user_id = ${numId}`
-    )
-    const usersArray = query.rows
+    const query = `SELECT * FROM users WHERE user_id = '${numId}'`
+    const result = await db.query(query)
+    const usersArray = result.rows
     if (usersArray.length === 0) {
-      throw new Error(`Sorry user ${numId} does not exist`)
+      throw new Error(`User ${numId} does not exist`)
     }
     res.json(usersArray[0])
   } catch (err) {
