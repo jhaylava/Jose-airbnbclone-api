@@ -1,5 +1,7 @@
 import { Router } from 'express'
 import db from '../db.js'
+import jwt from 'jsonwebtoken'
+import { secret } from '../secrets.js'
 const router = Router()
 
 // Post to photos data
@@ -79,15 +81,37 @@ router.patch('/photos/:photo_id', async (req, res) => {
 // Delete Route for clients to delete existing data
 router.delete('/photos/:photo_id', async (req, res) => {
   try {
-    const { rowCount } = await db.query(`
-    DELETE FROM photos WHERE photo_id = ${req.params.photo_id}
-    `)
-    if (!rowCount) {
-      throw new Error('Delete Failed')
+    const token = req.cookies.jwt
+    if (!token) {
+      throw new Error('Invalid authentication token')
     }
-    res.json(rowCount)
-  } catch (err) {
-    res.json({ error: err.message })
+    const decoded = jwt.verify(token, secret)
+    const photoId = req.params.photo_id
+    const query = `SELECT * FROM photos WHERE photo_id = ${photoId}`
+    const result = await db.query(query)
+    const photo = result.rows[0]
+
+    if (!photo) {
+      throw new Error(`Photo with ID ${photoId} not found`)
+    }
+    const houseQuery = `SELECT * FROM houses WHERE house_id = ${photo.house_id} AND host_id = ${decoded.user_id}`
+    const houseResult = await db.query(houseQuery)
+    const house = houseResult.rows[0]
+
+    if (!house) {
+      throw new Error('You are not authorized to delete this photo')
+    }
+
+    const deleteQuery = `DELETE FROM photos WHERE photo_id = ${photoId}`
+    const { rowCount } = await db.query(deleteQuery)
+    if (!rowCount) {
+      throw new Error('Delete operation failed')
+    }
+
+    res.json({ message: 'Photo deleted successfully' })
+  } catch (error) {
+    res.json({ error: error.message })
   }
 })
+
 export default router
