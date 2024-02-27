@@ -32,36 +32,63 @@ router.post('/bookings', async (req, res) => {
 // Define a GET route for fetching the list of bookings
 router.get('/bookings', async (req, res) => {
   try {
-    const { user } = req.query
+    const token = req.cookies.jwt
+
+    if (!token) {
+      throw new Error('Invalid authentication token')
+    }
+
+    const decoded = jwt.verify(token, secret)
+
+    const user_id = decoded.user_id
+
     const userSearch = `
       SELECT * FROM bookings
-      WHERE user_id = $1
-      ORDER BY bookings.arrival_date DESC
+      WHERE user_id = '${user_id}'
+      ORDER BY arrival_date DESC
     `
-    const { rows } = await db.query(userSearch, [user])
+
+    const { rows } = await db.query(userSearch)
     res.json(rows)
   } catch (err) {
-    console.error(err.message)
-    res.json({ error: 'we are down' })
+    res.json({ error: err.message })
   }
 })
 
-// Define a GET route for fetching a single review
+// Define a GET route for fetching a specific booking by ID
 router.get('/bookings/:booking_id', async (req, res) => {
   try {
-    let numbId = Number(req.params.booking_id)
-    if (!numbId) {
-      throw new Error('bookingId most be a number')
+    const token = req.cookies.jwt
+
+    if (!token) {
+      throw new Error('Invalid authentication token')
     }
-    const query = await db.query(
-      `SELECT * FROM bookings WHERE bookings.booking_id = ${numbId}`
-    )
-    const bookingsArray = query.rows
-    if (bookingsArray.length === 0) {
-      throw new Error(`Sorry booking ${numbId} does not exist`)
+
+    const decoded = jwt.verify(token, secret)
+
+    const user_id = decoded.user_id
+    const booking_id = req.params.booking_id
+
+    const bookingSearch = `
+      SELECT * FROM bookings
+      WHERE booking_id = '${booking_id}'
+    `
+
+    const { rows } = await db.query(bookingSearch)
+
+    if (rows.length === 0) {
+      throw new Error('Booking not found')
     }
-    res.json(bookingsArray[0])
+
+    const booking = rows[0]
+
+    if (booking.user_id !== user_id) {
+      throw new Error('You are not authorized')
+    }
+
+    res.json(booking)
   } catch (err) {
+    console.error(err.message)
     res.json({ error: err.message })
   }
 })
