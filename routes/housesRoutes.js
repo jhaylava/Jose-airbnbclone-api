@@ -6,16 +6,27 @@ const router = Router()
 
 // Post router
 router.post('/houses', async (req, res) => {
-  const { location, bedrooms, bathrooms, nightly_price, description, host_id } =
-    req.body
   try {
-    const result = await db.query(
-      `INSERT INTO houses (location, bedrooms, bathrooms, nightly_price, description, host_id)
-    VALUES ('${location}', ${bedrooms}, ${bathrooms}, ${nightly_price}, '${description}', ${host_id}) RETURNING *`
-    )
-    res.json(result.rows)
+    const { location, bedrooms, bathrooms, nightly_price, description } =
+      req.body
+    const token = req.cookies.jwt
+
+    if (!token) {
+      throw new Error('Invalid authentication token')
+    }
+
+    const decoded = jwt.verify(token, secret)
+
+    const insertHouseQuery = `
+      INSERT INTO houses (location, bedrooms, bathrooms, nightly_price, description, host_id)
+      VALUES ('${location}', ${bedrooms}, ${bathrooms}, ${nightly_price}, '${description}', ${decoded.user_id})
+      RETURNING *
+    `
+
+    const result = await db.query(insertHouseQuery)
+    res.json(result.rows[0])
   } catch (err) {
-    res.json(err.message)
+    res.json({ error: err.message })
   }
 })
 

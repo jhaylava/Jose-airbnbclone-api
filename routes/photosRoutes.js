@@ -6,20 +6,30 @@ const router = Router()
 
 // Post to photos data
 router.post('/photos', async (req, res) => {
-  const url = req.body.url
-  const house_id = req.body.house_id
-
-  console.log({ url, house_id })
-
-  const queryString = `
-  INSERT INTO photos ( url, house_id) VALUES ('${url}', ${house_id})
-  RETURNING * `
-
-  console.log(queryString)
-
   try {
-    const { rows } = await db.query(queryString)
-    res.json(rows)
+    const { url, house_id } = req.body
+    const token = req.cookies.jwt
+    if (!token) {
+      throw new Error('Invalid authentication token')
+    }
+
+    const decoded = jwt.verify(token, secret)
+    const userFoundQuery = `
+      SELECT * FROM houses WHERE host_id = '${decoded.user_id}'
+    `
+    const userFound = await db.query(userFoundQuery)
+    if (!userFound.rows.length > 0) {
+      throw new Error('Invalid authentication token or host not found')
+    }
+
+    const insertPhotoQuery = `
+      INSERT INTO photos (url, house_id)
+      VALUES ('${url}', '${house_id}')
+      RETURNING *
+    `
+
+    const { rows } = await db.query(insertPhotoQuery)
+    res.json(rows[0])
   } catch (err) {
     res.json({ error: err.message })
   }

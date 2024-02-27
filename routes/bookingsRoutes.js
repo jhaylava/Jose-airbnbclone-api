@@ -6,20 +6,24 @@ const router = Router()
 
 // Define a POST route for creating a list of bookings
 router.post('/bookings', async (req, res) => {
-  const house_id = req.body.house_id
-  const user_id = req.body.user_id
-  const price = req.body.price
-  const arrival_date = req.body.arrival_date
-  const departure_date = req.body.departure_date
-  const comment = req.body.comment
-  const queryString = `
-    INSERT INTO bookings ( house_id, user_id, price, arrival_date, departure_date, comment)
-    VALUES (${house_id}, ${user_id}, ${price},'${arrival_date}', '${departure_date}', '${comment}')
-    RETURNING * `
-  console.log(queryString)
   try {
-    const { rows } = await db.query(queryString)
-    res.json(rows)
+    const { house_id, price, arrival_date, departure_date, comment } = req.body
+    const token = req.cookies.jwt
+
+    if (!token) {
+      throw new Error('Invalid authentication token')
+    }
+
+    const decoded = jwt.verify(token, secret)
+
+    const insertBookingQuery = `
+      INSERT INTO bookings (house_id, user_id, price, arrival_date, departure_date, comment)
+      VALUES (${house_id}, ${decoded.user_id}, ${price}, '${arrival_date}', '${departure_date}', '${comment}')
+      RETURNING *
+    `
+
+    const { rows } = await db.query(insertBookingQuery)
+    res.json(rows[0])
   } catch (err) {
     res.json({ error: err.message })
   }
