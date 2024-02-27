@@ -1,5 +1,7 @@
 import { Router } from 'express'
 import db from '../db.js'
+import jwt from 'jsonwebtoken'
+import { secret } from '../secrets.js'
 const router = Router()
 
 // Define a POST route for creating a list of bookings
@@ -62,12 +64,29 @@ router.get('/bookings/:booking_id', async (req, res) => {
 
 router.delete('/bookings/:booking_id', async (req, res) => {
   try {
+    const token = req.cookies.jwt
+    if (!token) {
+      throw new Error('Invalid authentication token')
+    }
+    const decoded = jwt.verify(token, secret)
+    const bookingId = req.params.booking_id
+    const query = `SELECT * FROM bookings WHERE booking_id = ${bookingId}`
+    const result = await db.query(query)
+    const booking = result.rows[0]
+
+    if (!booking) {
+      throw new Error(`Booking with ID ${bookingId} not found`)
+    }
+
+    if (booking.user_id !== decoded.user_id) {
+      throw new Error('You are not authorized to delete this booking')
+    }
     const { rowCount } = await db.query(
-      `DELETE FROM bookings WHERE booking_id = ${req.params.booking_id}`
+      `DELETE FROM bookings WHERE booking_id = ${bookingId}`
     )
     res.json(rowCount)
   } catch (error) {
-    res.json({ error: err.message })
+    res.json({ error: error.message })
   }
 })
 

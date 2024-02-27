@@ -1,5 +1,7 @@
 import { Router } from 'express'
 import db from '../db.js'
+import jwt from 'jsonwebtoken'
+import { secret } from '../secrets.js'
 const router = Router()
 
 // Post router
@@ -116,8 +118,27 @@ router.patch('/houses/:house_id', async (req, res) => {
 
 router.delete('/houses/:house_id', async (req, res) => {
   try {
+    const token = req.cookies.jwt
+    if (!token) {
+      throw new Error('Invalid authentication token')
+    }
+    const decoded = jwt.verify(token, secret)
+
+    const houseId = req.params.house_id
+    const query = `SELECT * FROM houses WHERE house_id = ${houseId}`
+    const result = await db.query(query)
+    const house = result.rows[0]
+
+    if (!house) {
+      throw new Error(`House with ID ${houseId} not found`)
+    }
+
+    if (house.host_id !== decoded.user_id) {
+      throw new Error('You are not authorized to delete this house')
+    }
+
     const { rowCount } = await db.query(
-      `DELETE FROM houses WHERE house_id = ${req.params.house_id}`
+      `DELETE FROM houses WHERE house_id = ${houseId}`
     )
     res.json(rowCount)
   } catch (error) {
